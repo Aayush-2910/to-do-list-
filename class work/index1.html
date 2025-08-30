@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      height: 100vh;
+      display: flex;
+    }
+
+    /* Navbar */
+    .navbar {
+      width: 100%;
+      background: darkblue;
+      padding: 15px;
+      text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+    .navbar h1 {
+      margin: 0;
+      color: lightblue;
+      font-size: 28px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background: #2e62c0;
+      color: white;
+      padding: 20px;
+      margin-top: 60px; /* space for navbar */
+      box-sizing: border-box;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar li {
+      padding: 10px;
+      margin: 8px 0;
+      background: #4e89e0;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .sidebar li:hover {
+      background: #1f48a5;
+    }
+
+    /* Card */
+    .container {
+      width: 600px;
+      padding: 30px;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background: #fefefe;
+      margin: 100px auto 0 auto; /* space for navbar and center */
+      box-shadow: 3px 3px 12px rgba(0,0,0,0.3);
+      position: relative;
+      left: 220px; /* move right to adjust for sidebar */
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+    li.task {
+      background: #e9f0ff;
+      margin: 8px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 18px;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    input[type="checkbox"]:checked + span {
+      text-decoration: line-through;
+      color: gray;
+    }
+    textarea {
+      width: 100%;
+      height: 70px;
+      margin-bottom: 12px;
+      padding: 8px;
+      border: 1px solid #999;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #66a6ff;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4e89e0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>Made by Aayush &#10084;</h1>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Categories</h2>
+    <ul>
+      <li onclick="showCategory('study')">📚 Study</li>
+      <li onclick="showCategory('workout')">🏋️ Workout</li>
+      <li onclick="clearAll()">🗑️ Clear All</li>
+    </ul>
+  </div>
+
+  <!-- To-Do Card -->
+  <div class="container">
+    <h2 id="title">&#128221; Study To-Do List</h2>
+    <ul id="taskList"></ul>
+
+    <textarea id="taskInput" placeholder="Write new task..."></textarea>
+    <button onclick="addTask()">Save</button>
+  </div>
+
+  <script>
+    let currentCategory = "study";
+
+    const tasks = {
+      study: ["Do Homework", "Read Book"],
+      workout: ["Push-ups 20x", "Run 2 km"]
+    };
+
+    function renderTasks() {
+      const taskList = document.getElementById("taskList");
+      const title = document.getElementById("title");
+
+      taskList.innerHTML = "";
+      title.textContent =
+        (currentCategory === "study" ? "📚 Study" : "🏋️ Workout") + " To-Do List";
+
+      tasks[currentCategory].forEach(task => {
+        let li = document.createElement("li");
+        li.className = "task";
+        li.innerHTML = `<input type="checkbox"><span>${task}</span>`;
+        taskList.appendChild(li);
+      });
+    }
+
+    function showCategory(category) {
+      currentCategory = category;
+      renderTasks();
+    }
+
+    function addTask() {
+      let input = document.getElementById("taskInput");
+      let taskText = input.value.trim();
+
+      if (taskText === "") {
+        alert("Please write something!");
+        return;
+      }
+
+      tasks[currentCategory].push(taskText);
+      renderTasks();
+      input.value = ""; // clear textarea
+    }
+
+    function clearAll() {
+      if (confirm("Are you sure you want to clear all tasks in this category?")) {
+        tasks[currentCategory] = [];
+        renderTasks();
+      }
+    }
+
+    // Initial render
+    renderTasks();
+  </script>
+</body>
+</html>
